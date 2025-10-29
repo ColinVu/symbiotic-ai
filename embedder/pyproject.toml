@@ -1,0 +1,18 @@
+[project]
+name = "embedder"
+version = "0.1.0"
+description = "Image Embedding Model for the AI Through Symbiosis Project"
+authors = [
+    {name = "N8BWert",email = "n8.wert.b@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+]
+
+[tool.poetry]
+packages = [{include = "embedder", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
