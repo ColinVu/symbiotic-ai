@@ -26,7 +26,7 @@ def detect_orientation(
         right_thumb = None
         right_middle_finger = None
         for hand_landmarks in results.multi_hand_landmarks:
-            landmarks = hand_landmarks[:21]
+            landmarks = hand_landmarks.landmark[:21]
             thumb = np.array([landmarks[4].x, landmarks[4].y, 0.0])
             middle_finger = np.array([landmarks[12].x, landmarks[12].y, 0.0])
             if right_thumb is None:

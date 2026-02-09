@@ -19,7 +19,20 @@ symbiosis/data
 *.lab
 packaged/shared/
 
-# Videos
-./videos/*
+# Large files/directories to exclude
+# Videos folder - keep folder but ignore contents
+videos/*
+!videos/.gitkeep
+
+# Models classifier folder - keep folder but ignore contents
+models/classifier/*
+!models/classifier/.gitkeep
+
+# Image testing folder - keep folder but ignore contents
+images/image-testing/*
+!images/image-testing/.gitkeep
+
+# Non-blurry folder - ignore entire folder
+non-blurry/
 
 ./old/**

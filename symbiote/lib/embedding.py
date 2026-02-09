@@ -23,7 +23,7 @@ def embed_image(
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = segment_hand(image)
     if image is None:
-        print(f"Unable to segment image in {image_name}")
+        print(f"Unable to segment image in image")
         return None
     inputs = processor(images=[image], return_tensors="pt").to(model.device)
     with torch.no_grad():

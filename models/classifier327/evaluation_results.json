@@ -1,0 +1,19 @@
+{
+  "top1_accuracy": 0.9661016949152542,
+  "top3_accuracy": 1.0,
+  "num_test_samples": 59,
+  "num_classes": 11,
+  "class_labels": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k"
+  ]
+}
