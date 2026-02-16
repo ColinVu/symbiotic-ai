@@ -19,7 +19,7 @@ This document lists ALL data files, configuration files, and setup requirements 
 **Required Fields**:
 ```json
 {
-  "marker_dict": "DICT_4X4_100",
+  "marker_dict": "DICT_4X4_1000",
   "bins": {
     "MARKER_ID": {
       "type": "pick" or "place",
@@ -34,7 +34,7 @@ This document lists ALL data files, configuration files, and setup requirements 
 **Example**:
 ```json
 {
-  "marker_dict": "DICT_4X4_100",
+  "marker_dict": "DICT_4X4_1000",
   "bins": {
     "0": {
       "type": "pick",
@@ -62,7 +62,7 @@ This document lists ALL data files, configuration files, and setup requirements 
 ```
 
 **How to Create**:
-1. Decide on ARUCO dictionary (recommend DICT_4X4_100)
+1. Decide on ARUCO dictionary (default DICT_4X4_1000 for 3-digit IDs 0-999)
 2. Assign unique IDs to each physical bin
 3. Map IDs to "pick" or "place" type
 4. Specify which object each bin contains
@@ -240,7 +240,7 @@ HERest -V  # Should print HTK version
 **What**: Physical ARUCO markers for bin identification
 
 **Steps**:
-1. Generate markers from DICT_4X4_100 dictionary
+1. Generate markers from DICT_4X4_1000 dictionary (IDs 0-999)
    - Use online generator: https://chev.me/arucogen/
    - Or use OpenCV Python script
 2. Print markers (recommended size: 6-8 inches square)
@@ -253,7 +253,7 @@ HERest -V  # Should print HTK version
 import cv2
 import numpy as np
 
-aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_100)
+aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_1000)
 
 for marker_id in [0, 1, 2, 10, 11, 12]:
     marker_image = cv2.aruco.drawMarker(aruco_dict, marker_id, 400)
@@ -490,7 +490,7 @@ python -m symbiote.cli.main train \
 ### Issue: "No ARUCO markers detected"
 **Solution**: 
 - Check lighting (avoid glare)
-- Verify markers are printed from correct dictionary (DICT_4X4_100)
+- Verify markers are printed from correct dictionary (DICT_4X4_1000 for IDs 0-999)
 - Ensure markers are in camera view
 - Run ARUCO test tool to validate
 

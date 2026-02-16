@@ -8,6 +8,8 @@ from ..core.config import DEFAULT_CONFIG
 from ..pipelines.video_training import run_video_training
 from ..pipelines.video_inference import run_video_inference
 from ..inference.recognizer import ObjectRecognizer
+from ..state_detection.training import train_state_detector
+from ..state_detection.detector import detect_states_from_video, HandState
 
 
 def main():
@@ -33,6 +35,9 @@ Examples:
   
   # Inference with custom frame skip and blur threshold
   python -m symbiote.cli.main infer --video ../videos/test.mp4 --model-dir ../models/classifier/video_name --output results.csv --frame-skip 10 --threshold 120.0
+  
+  # Train HTK HMM state detector
+  python -m symbiote.cli.main train-hmm --videos video1.mp4 video2.mp4 --annotations ann1.csv ann2.csv --output-dir ../models/htk --aruco-config config/aruco_bins.json
 """
     )
     
@@ -110,6 +115,66 @@ Examples:
         "--no-cache",
         action="store_true",
         help="Disable embedding cache (re-embed all images every run)"
+    )
+    train_parser.add_argument(
+        "--htk-model-dir",
+        type=str,
+        default=None,
+        help="Path to trained HTK HMM model directory (for state detection during training)"
+    )
+    train_parser.add_argument(
+        "--aruco-config",
+        type=str,
+        default=None,
+        help="Path to ARUCO marker configuration JSON"
+    )
+    
+    # Train-HMM command
+    hmm_parser = subparsers.add_parser(
+        "train-hmm",
+        help="Train HTK HMM state detector from annotated videos"
+    )
+    hmm_parser.add_argument(
+        "--videos",
+        nargs="+",
+        required=True,
+        help="Paths to training video files"
+    )
+    hmm_parser.add_argument(
+        "--annotations",
+        nargs="+",
+        required=True,
+        help="Paths to CSV annotation files (one per video, same order)"
+    )
+    hmm_parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="../models/htk",
+        help="Directory to save trained HTK HMM model"
+    )
+    hmm_parser.add_argument(
+        "--aruco-config",
+        type=str,
+        default=None,
+        help="Path to ARUCO marker configuration JSON"
+    )
+    hmm_parser.add_argument(
+        "--frame-skip",
+        type=int,
+        default=4,
+        help="Process every Nth frame (default 4)"
+    )
+    hmm_parser.add_argument(
+        "--threshold",
+        type=float,
+        default=100.0,
+        help="Blur detection threshold (Laplacian variance, default 100.0)"
+    )
+    hmm_parser.add_argument(
+        "--verbose",
+        action="store_true",
+        default=True,
+        help="Show detailed progress"
     )
     
     # Predict command
@@ -206,6 +271,19 @@ Examples:
         config["learning_rate"] = args.lr
         config["hidden_dim"] = args.hidden_dim
         
+        # Resolve optional HTK paths
+        htk_model_dir = None
+        if args.htk_model_dir:
+            htk_model_dir = args.htk_model_dir
+            if not os.path.isabs(htk_model_dir):
+                htk_model_dir = os.path.normpath(os.path.join(script_dir, htk_model_dir))
+        
+        aruco_config = None
+        if args.aruco_config:
+            aruco_config = args.aruco_config
+            if not os.path.isabs(aruco_config):
+                aruco_config = os.path.normpath(os.path.join(script_dir, aruco_config))
+        
         run_video_training(
             video_path=video_path,
             label=args.label,
@@ -214,7 +292,9 @@ Examples:
             threshold=args.threshold,
             frame_skip=args.frame_skip,
             image_dir=image_dir,
-            verbose=args.verbose
+            verbose=args.verbose,
+            htk_model_dir=htk_model_dir,
+            aruco_config_path=aruco_config,
         )
         
     elif args.command == "predict":
@@ -286,6 +366,56 @@ Examples:
             print(f"\nInference complete! Results saved to: {result_path}")
         except Exception as e:
             print(f"\nError during inference: {e}")
+            sys.exit(1)
+    
+    elif args.command == "train-hmm":
+        # Resolve video paths
+        video_paths = []
+        for vp in args.videos:
+            if not os.path.isabs(vp):
+                vp = os.path.normpath(os.path.join(script_dir, vp))
+            if not os.path.exists(vp):
+                print(f"Error: Video file not found: {vp}")
+                sys.exit(1)
+            video_paths.append(vp)
+        
+        # Resolve annotation paths
+        annotation_paths = []
+        for ap in args.annotations:
+            if not os.path.isabs(ap):
+                ap = os.path.normpath(os.path.join(script_dir, ap))
+            if not os.path.exists(ap):
+                print(f"Error: Annotation file not found: {ap}")
+                sys.exit(1)
+            annotation_paths.append(ap)
+        
+        if len(video_paths) != len(annotation_paths):
+            print("Error: Number of --videos must match number of --annotations")
+            sys.exit(1)
+        
+        output_dir = os.path.normpath(os.path.join(script_dir, args.output_dir))
+        
+        aruco_config = None
+        if args.aruco_config:
+            aruco_config = args.aruco_config
+            if not os.path.isabs(aruco_config):
+                aruco_config = os.path.normpath(os.path.join(script_dir, aruco_config))
+        
+        try:
+            final_model_dir = train_state_detector(
+                video_paths=video_paths,
+                annotation_paths=annotation_paths,
+                output_dir=output_dir,
+                aruco_config_path=aruco_config,
+                frame_skip=args.frame_skip,
+                blur_threshold=args.threshold,
+                verbose=args.verbose,
+            )
+            print(f"\nHTK HMM training complete! Model saved to: {final_model_dir}")
+        except Exception as e:
+            print(f"\nError during HTK HMM training: {e}")
+            import traceback
+            traceback.print_exc()
             sys.exit(1)
 
 

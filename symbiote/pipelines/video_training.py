@@ -33,7 +33,9 @@ def run_video_training(
     threshold: float = 100.0,
     frame_skip: int = 4,
     image_dir: Optional[str] = None,
-    verbose: bool = True
+    verbose: bool = True,
+    htk_model_dir: Optional[str] = None,
+    aruco_config_path: Optional[str] = None,
 ):
     """
     Run the complete training pipeline from video frames.
@@ -54,6 +56,8 @@ def run_video_training(
         frame_skip: Process every Nth frame (default 4)
         image_dir: Directory with image folders for old cache label lookup (optional)
         verbose: Whether to print progress
+        htk_model_dir: Path to trained HTK HMM model for real state detection (optional)
+        aruco_config_path: Path to ARUCO marker configuration JSON (optional)
     """
     # Set random seeds
     random.seed(config["random_seed"])
@@ -86,6 +90,19 @@ def run_video_training(
     processor = AutoProcessor.from_pretrained(MODEL)
     print(f"✓ CLIP model loaded (device: {device})")
     
+    # Build state detection function with HTK parameters
+    def _state_detect(vp, emb, fn, fps):
+        return detect_states_from_video(
+            vp, emb, fn, fps,
+            htk_model_dir=htk_model_dir,
+            aruco_config_path=aruco_config_path,
+            frame_skip=frame_skip,
+            blur_threshold=threshold,
+            clip_model=clip_model,
+            clip_processor=processor,
+            verbose=verbose,
+        )
+
     # Process video frames and add to cache
     video_embeddings, video_labels, video_paths, state_results = process_video_frames(
         video_path, label, clip_model, processor, cache_dir,
@@ -93,7 +110,7 @@ def run_video_training(
         threshold=threshold, 
         frame_skip=frame_skip,
         state_filter={HandState.CARRY_WITH.value},  # Only cache CARRY_WITH frames
-        state_detection_func=detect_states_from_video,
+        state_detection_func=_state_detect,
         verbose=verbose
     )
     

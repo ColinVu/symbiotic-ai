@@ -336,7 +336,7 @@ class FeatureExtractor:
 class ArucoDetector:
     """Detect ARUCO markers and compute weighted bin context."""
     
-    def __init__(self, aruco_dict_type=cv2.aruco.DICT_4X4_100):
+    def __init__(self, aruco_dict_type=cv2.aruco.DICT_4X4_1000):
         """Initialize ARUCO detector with dictionary type."""
         self.aruco_dict = cv2.aruco.Dictionary_get(aruco_dict_type)
         self.aruco_params = cv2.aruco.DetectorParameters_create()
@@ -527,7 +527,7 @@ class ArucoDetector:
 **Configuration File Format** (`aruco_bins.json`):
 ```json
 {
-  "marker_dict": "DICT_4X4_100",
+  "marker_dict": "DICT_4X4_1000",
   "bins": {
     "0": {"type": "pick", "object": "apple", "color": "red"},
     "1": {"type": "pick", "object": "banana", "color": "yellow"},
@@ -887,7 +887,7 @@ class HTKConfig:
     transition_probs: Dict[str, Dict[str, float]] = None
     
     # ARUCO configuration
-    aruco_dict_type: str = "DICT_4X4_100"
+    aruco_dict_type: str = "DICT_4X4_1000"
     aruco_distance_decay: float = 5.0  # Controls weight decay with distance
     
     # HTK paths
@@ -1018,7 +1018,7 @@ timestamp_start,timestamp_end,state
 
 ```json
 {
-  "marker_dict": "DICT_4X4_100",
+  "marker_dict": "DICT_4X4_1000",
   "bins": {
     "0": {
       "type": "pick",
@@ -1056,7 +1056,7 @@ timestamp_start,timestamp_end,state
 ```
 
 **Setup Requirements**:
-- Print ARUCO markers from DICT_4X4_100 dictionary
+- Print ARUCO markers from DICT_4X4_1000 dictionary (IDs 0-999)
 - Affix markers to bins in clear view
 - Ensure markers are visible in all training/test videos
 - Keep consistent lighting to avoid detection failures
@@ -1380,7 +1380,7 @@ Use this tool to verify:
 **Issue: No markers detected**
 - Check lighting (avoid glare)
 - Verify marker size is sufficient (recommend 6-8 inches)
-- Confirm ARUCO dictionary matches (DICT_4X4_100)
+- Confirm ARUCO dictionary matches (DICT_4X4_1000 for 3-digit IDs)
 
 **Issue: Wrong marker colors**
 - Check `aruco_bins.json` configuration
@@ -1586,7 +1586,7 @@ def test_state_detection():
 **Issue**: ARUCO markers not detected
 - **Solution**: 
   - Check lighting (avoid glare)
-  - Verify marker dictionary matches (DICT_4X4_100)
+  - Verify marker dictionary matches (DICT_4X4_1000)
   - Increase marker size (print larger)
   - Check camera focus
 
@@ -1667,7 +1667,7 @@ When implementing, create/modify these files in order:
 
 ## Questions to Resolve Before Implementation
 
-1. **ARUCO Dictionary**: Confirm DICT_4X4_100 or choose different dictionary?
+1. **ARUCO Dictionary**: Default DICT_4X4_1000 (IDs 0-999); choose different if needed.
 2. **Bin Layout**: Physical setup of pick/place bins (distances, heights)?
 3. **Camera Setup**: Fixed camera or hand-held? Resolution? Frame rate?
 4. **Training Data**: Who will annotate videos? What annotation tool?
