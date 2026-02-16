@@ -1,0 +1,25 @@
+{
+  "top1_accuracy": 0.8686131386861314,
+  "top3_accuracy": 1.0,
+  "num_test_samples": 137,
+  "num_classes": 14,
+  "class_labels": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n"
+  ],
+  "video_processed": "GX011230",
+  "label": "n",
+  "frames_embedded": 21
+}

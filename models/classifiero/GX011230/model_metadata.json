@@ -1,0 +1,49 @@
+{
+  "label_to_idx": {
+    "a": 0,
+    "b": 1,
+    "c": 2,
+    "d": 3,
+    "e": 4,
+    "f": 5,
+    "g": 6,
+    "h": 7,
+    "i": 8,
+    "j": 9,
+    "k": 10,
+    "l": 11,
+    "m": 12,
+    "n": 13
+  },
+  "idx_to_label": {
+    "0": "a",
+    "1": "b",
+    "2": "c",
+    "3": "d",
+    "4": "e",
+    "5": "f",
+    "6": "g",
+    "7": "h",
+    "8": "i",
+    "9": "j",
+    "10": "k",
+    "11": "l",
+    "12": "m",
+    "13": "n"
+  },
+  "embedding_dim": 512,
+  "num_classes": 14,
+  "config": {
+    "train_ratio": 0.7,
+    "val_ratio": 0.15,
+    "test_ratio": 0.15,
+    "batch_size": 16,
+    "learning_rate": 0.001,
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "hidden_dim": 128,
+    "dropout": 0.3,
+    "random_seed": 42
+  },
+  "clip_model": "openai/clip-vit-base-patch32"
+}

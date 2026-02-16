@@ -57,7 +57,7 @@ class State(enum.Enum):
     # The user is placing an item into the bins
     PLACE = 2
     # The user is walking back to the picking area
-    CARRY_EMPTY = 3
+    CARRY_WITHOUT = 3
 
 # The most recent 10 detections
 recent_detections = np.array([State.PICK.value for _ in range(10)])
@@ -77,10 +77,10 @@ def detect_state(
         case (Orientation.Up, State.PICK):
             next_state = State.CARRY_WITH
         case (Orientation.Up, State.PLACE):
-            next_state = State.CARRY_EMPTY
+            next_state = State.CARRY_WITHOUT
         case (Orientation.Down, State.CARRY_WITH):
             next_state = State.PLACE
-        case (Orientation.Down, State.CARRY_EMPTY):
+        case (Orientation.Down, State.CARRY_WITHOUT):
             next_state = State.PICK
     
     recent_detections[detection_idx] = next_state

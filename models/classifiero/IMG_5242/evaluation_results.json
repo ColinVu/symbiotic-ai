@@ -1,0 +1,24 @@
+{
+  "top1_accuracy": 0.8872180451127819,
+  "top3_accuracy": 1.0,
+  "num_test_samples": 133,
+  "num_classes": 13,
+  "class_labels": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m"
+  ],
+  "video_processed": "IMG_5242",
+  "label": "b",
+  "frames_embedded": 40
+}
