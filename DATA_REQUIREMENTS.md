@@ -1,5 +1,7 @@
 # Data Requirements for Symbiote Pipeline
 
+> **🐳 Docker Setup**: For containerized deployment (recommended for HTK on Windows), see `DOCKER_SETUP.md`. This eliminates HTK installation issues and provides a reproducible environment.
+
 ## Overview
 
 This document lists ALL data files, configuration files, and setup requirements needed before running the symbiote pipeline. Use this as a checklist to ensure your system is properly configured.

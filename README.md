@@ -1,5 +1,7 @@
 # AI Through Symbiosis
 
+> **🐳 New: Docker Support for HTK HMM State Detection** - See `DOCKER_SETUP.md` for containerized deployment. Recommended for Windows users to avoid HTK installation issues.
+
 ## Description
 
 AI Through Symbiosis is the idea that an AI should be able to learn through the actions we (as humans) take every day so they can assist in small natural ways.  Specifically, imagine the scenario of a warehouse (the main focus of this project).  In a warehouse, workers pick items and add them to a given dropoff location.  In this scenario, the worker is completing the same task continually so an AI system should be able to learn from the worker.  Specifically, the AI should be able to learn what items are being picked so that it could (eventually) be able to offer advice and corrections to the worker if they are picking the incorrect items.

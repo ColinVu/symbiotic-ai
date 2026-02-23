@@ -1,0 +1,53 @@
+# Docker Compose file for Symbiotic AI
+# Simplifies running the container with proper volume mounts
+
+version: '3.8'
+
+services:
+  symbiotic-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: symbiotic-ai:latest
+    container_name: symbiotic-ai-container
+    
+    # Mount local directories into container
+    volumes:
+      # Videos directory
+      - ./videos:/data/videos:ro
+      
+      # Annotations directory (for HMM training)
+      - ./annotations:/data/annotations:ro
+      
+      # ARUCO configuration
+      - ./config:/data/aruco_config:ro
+      
+      # Models output directory (read-write)
+      - ./models:/models:rw
+      
+      # General outputs (read-write)
+      - ./outputs:/outputs:rw
+    
+    # Environment variables
+    environment:
+      - PYTHONUNBUFFERED=1
+    
+    # For GPU support (requires nvidia-docker)
+    # Uncomment these lines if you have NVIDIA GPU and nvidia-docker installed
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    
+    # Default command (can be overridden)
+    # command: python -m symbiote.cli.main --help
+    
+    # Keep container running for interactive use
+    stdin_open: true
+    tty: true
+
+# To run commands:
+# docker-compose run --rm symbiotic-ai python -m symbiote.cli.main train --video /data/videos/video.mp4 --label "apple"

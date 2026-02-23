@@ -1,5 +1,7 @@
 # Quick Start Guide: New Features
 
+> **🐳 Docker Users**: See `DOCKER_SETUP.md` for containerized setup instructions. All commands below can be run inside Docker by prefixing with `docker-compose run --rm symbiotic-ai` and using container paths (e.g., `/data/videos/` instead of `../videos/`).
+
 ## Video Inference Pipeline
 
 ### What It Does

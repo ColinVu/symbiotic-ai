@@ -1,5 +1,7 @@
 # HTK Hidden Markov Model State Detection Implementation Guide
 
+> **🐳 Docker Deployment**: This system requires HTK toolkit. For Windows users, Docker containerization (see `DOCKER_SETUP.md`) is the recommended approach to avoid HTK compilation issues. All commands in this guide work inside Docker with appropriate path adjustments.
+
 ## Overview
 
 This document describes how to implement an HTK-based Hidden Markov Model (HMM) system for detecting hand manipulation states in the symbiote pipeline. This system will replace the placeholder in `state_detection/detector.py` with a real, trainable state detection algorithm.
